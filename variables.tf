@@ -30,12 +30,22 @@ variable "vpc_cidr" {
   description = "CIDR block for the VPC."
   type        = string
   default     = "10.0.0.0/16"
+
+  validation {
+    condition     = can(cidrhost(var.vpc_cidr, 0))
+    error_message = "vpc_cidr must be a valid IPv4 CIDR block."
+  }
 }
 
 variable "public_subnet_cidr" {
   description = "CIDR block for the public subnet."
   type        = string
   default     = "10.0.1.0/24"
+
+  validation {
+    condition     = can(cidrhost(var.public_subnet_cidr, 0))
+    error_message = "public_subnet_cidr must be a valid IPv4 CIDR block."
+  }
 }
 
 variable "instance_type" {
@@ -44,10 +54,22 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
+variable "key_name" {
+  description = "Optional name of an existing EC2 key pair for SSH access."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
 variable "admin_cidr" {
   description = "CIDR block allowed to connect to the EC2 instance over SSH."
   type        = string
   default     = "127.0.0.1/32"
+
+  validation {
+    condition     = can(cidrhost(var.admin_cidr, 0))
+    error_message = "admin_cidr must be a valid IPv4 CIDR block."
+  }
 }
 
 variable "tags" {
